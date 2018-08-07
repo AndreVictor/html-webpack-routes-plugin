@@ -1,0 +1,40 @@
+{
+  "name": "html-webpack-routes-plugin",
+  "version": "0.0.1",
+  "description": "Clone routes for HTML Webpack Plugin",
+  "keywords": [
+    "webpack",
+    "plugin",
+    "html",
+    "partial",
+    "template",
+    "html-webpack-plugin",
+    "html-webpack-routes-plugin"
+  ],
+  "main": "index.js",
+  "repository": "git@github.com:colbyfayock/html-webpack-routes-plugin.git",
+  "author": "Colby Fayock <hello@colbyfayock.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "mkdirp": "^0.5.1",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.52",
+    "@babel/preset-env": "^7.0.0-beta.52",
+    "@babel/preset-react": "^7.0.0-beta.52",
+    "babel-loader": "^8.0.0-beta",
+    "chai": "^4.1.2",
+    "html-webpack-partials-plugin": "^0.1.4",
+    "html-webpack-plugin": "^4.0.0-alpha",
+    "mocha": "^5.2.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8"
+  }
+}
