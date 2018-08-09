@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:9.10.0
-    working_directory: ~/html-webpack-partials-plugin
+    working_directory: ~/html-webpack-routes-plugin
     steps:
       - checkout
       - run: yarn install
