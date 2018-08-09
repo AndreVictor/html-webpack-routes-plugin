@@ -1,6 +1,8 @@
-const mkdirp = require('mkdirp');
 const path = require('path');
 const fs = require('fs');
+const mkdirp = require('mkdirp');
+const Util = require('./lib/util');
+const Assets = require('./lib/assets');
 
 /**
  * HtmlWebpackRoutesPlugin
@@ -26,14 +28,9 @@ class HtmlWebpackRoutesPlugin {
           this.routes = [ this.routes ];
         }
 
-        const original_path = path.resolve(compilation.compiler.outputPath, data.outputName);
-        const source = compilation.assets[data.outputName].source();
+        const promises = this.routes.map((route) => cloneSourceToRoute(route, data, compilation));
 
-        Promise.all(this.routes.map((route) => writeRoute(route, original_path, source))).then(data => {
-          callback(null);
-        }).catch(error => {
-          callback(error);
-        });
+        Promise.all(promises).then(() => callback(null)).catch(callback);
 
       });
 
@@ -47,27 +44,44 @@ module.exports = HtmlWebpackRoutesPlugin;
 
 
 /**
- * writeRoute
- * @description
+ * cloneSourceToRoute
+ * @description Takes the given data and compilatiton and clones given new routes
  */
 
-function writeRoute(route, original_path, source) {
+function cloneSourceToRoute(route, data, compilation) {
 
-  const directory = path.dirname(original_path);
-  const name = path.basename(original_path);
+  const original_path = path.resolve(compilation.compiler.outputPath, data.outputName);
+  const original_directory = path.dirname(original_path);
+  const original_filename = path.basename(original_path);
+  const new_directory = path.join(original_directory, route);
+  const new_path = path.join(new_directory, original_filename);
+  const path_to_original = path.relative(new_directory, original_directory);
+  const assets = Assets.getAssetPaths(Assets.parseAssetsFromData(data), path_to_original) || [];
 
+  let source = compilation.assets[data.outputName].source();
+
+  assets.forEach((asset) => {
+    source = Util.replaceScriptPath(source, asset.path_original, asset.path_new);
+  });
+
+  return writeRoute(new_path, source);
+
+}
+
+
+/**
+ * writeRoute
+ * @description Returns a promise that creates a new route's file given the path and source
+ */
+
+function writeRoute(new_path, source) {
   return new Promise((resolve, reject) => {
 
-    const new_directory = `${directory}${route}`;
-    let new_path;
-
-    mkdirp(new_directory, (mkdirp_error) => {
+    mkdirp(path.dirname(new_path), (mkdirp_error) => {
 
       if ( mkdirp_error ) {
         reject(mkdirp_error);
       }
-
-      new_path = `${new_directory}/${name}`;
 
       fs.writeFile(new_path, source, (write_file_error) => {
 
@@ -75,12 +89,11 @@ function writeRoute(route, original_path, source) {
           reject(write_file_error);
         }
 
-        resolve();
+        resolve(new_path);
 
       });
 
     });
 
   });
-
 }

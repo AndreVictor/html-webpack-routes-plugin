@@ -11,6 +11,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
+const HtmlWebpackRoutesPlugin = require('../../');
 
 module.exports = {
   entry: {
@@ -41,8 +42,12 @@ module.exports = {
     new HtmlWebpackPlugin(),
     new HtmlWebpackPartialsPlugin({
       path: path.join(__dirname, './partials/body.html')
-    })
+    }),
+    new HtmlWebpackRoutesPlugin([
+      '/page1',
+      '/page2'
+    ])
   ]
 };
-</pre><script src="main.js"></script></body>
+</pre><script src="../main.js"></script></body>
 </html>
