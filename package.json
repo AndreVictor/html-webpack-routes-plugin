@@ -19,12 +19,14 @@
     "test": "mocha"
   },
   "dependencies": {
+    "@babel/register": "^7.0.0-rc.1",
+    "cheerio": "^1.0.0-rc.2",
     "fs": "^0.0.1-security",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.52",
+    "@babel/core": "^7.0.0-rc.1",
     "@babel/preset-env": "^7.0.0-beta.52",
     "@babel/preset-react": "^7.0.0-beta.52",
     "babel-loader": "^8.0.0-beta",
