@@ -1,8 +1,6 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
 const Util = require('./lib/util');
-const Assets = require('./lib/assets');
+const Asset = require('./lib/asset');
+const Route = require('./lib/route');
 
 /**
  * HtmlWebpackRoutesPlugin
@@ -12,23 +10,57 @@ const Assets = require('./lib/assets');
 
 class HtmlWebpackRoutesPlugin {
 
-  constructor(routes = []) {
-    this.routes = Array.from(routes);
+  constructor(settings) {
+    this.settings = settings;
   }
 
   apply(compiler) {
 
     compiler.hooks.compilation.tap('HtmlWebpackRoutesPlugin', compilation => {
 
-      compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {
+      compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {
 
-        // If the input isn't an array, add it as one to simplify the process
+        const routes = this.routes();
 
-        if ( !Array.isArray(this.routes) ) {
-          this.routes = [ this.routes ];
-        }
+        // If the input isn't an array we can't work with it
 
-        const promises = this.routes.map((route) => cloneSourceToRoute(route, data, compilation));
+        if ( !Array.isArray(routes) ) return;
+
+        routes.push('/');
+
+        const promises = routes.map((route) => {
+
+          let assets = Util.parseStringToJson(data.plugin.assetJson);
+
+          assets = assets.map((asset) => new Asset(asset));
+
+          route = new Route({
+            route_path: route,
+            output_path: compilation.compiler.outputPath,
+            output_name: data.outputName,
+            source: data.html,
+            assets: assets,
+          });
+
+
+          route.updateAssetPaths();
+
+          if ( this.settings.prerender ) {
+            route.prerender(this.settings.prerender);
+          }
+
+
+          if ( route.route_path === '/' ) {
+
+            data.html = route.source;
+
+            return;
+
+          }
+
+          return route.writeRoute();
+
+        });
 
         Promise.all(promises).then(() => callback(null)).catch(callback);
 
@@ -38,62 +70,31 @@ class HtmlWebpackRoutesPlugin {
 
   }
 
+  routes(settings = this.settings) {
+
+    if ( !settings ) return;
+
+    // If it's an array, we want to return it as a cloned array
+
+    if ( Array.isArray(settings) ) {
+      return Array.from(settings);
+    }
+
+    // If it's a string, turn it into an array to normalize it and send it
+
+    if ( typeof settings === 'string' ) {
+      return [ settings ];
+    }
+
+    // If we have a routes property, run the same method on the routes value
+    // and go through the same process again
+
+    if ( settings.routes ) {
+      return this.routes(settings.routes);
+    }
+
+  }
+
 }
 
 module.exports = HtmlWebpackRoutesPlugin;
-
-
-/**
- * cloneSourceToRoute
- * @description Takes the given data and compilatiton and clones given new routes
- */
-
-function cloneSourceToRoute(route, data, compilation) {
-
-  const original_path = path.resolve(compilation.compiler.outputPath, data.outputName);
-  const original_directory = path.dirname(original_path);
-  const original_filename = path.basename(original_path);
-  const new_directory = path.join(original_directory, route);
-  const new_path = path.join(new_directory, original_filename);
-  const path_to_original = path.relative(new_directory, original_directory);
-  const assets = Assets.getAssetPaths(Assets.parseAssetsFromData(data), path_to_original) || [];
-
-  let source = compilation.assets[data.outputName].source();
-
-  assets.forEach((asset) => {
-    source = Util.replaceScriptPath(source, asset.path_original, asset.path_new);
-  });
-
-  return writeRoute(new_path, source);
-
-}
-
-
-/**
- * writeRoute
- * @description Returns a promise that creates a new route's file given the path and source
- */
-
-function writeRoute(new_path, source) {
-  return new Promise((resolve, reject) => {
-
-    mkdirp(path.dirname(new_path), (mkdirp_error) => {
-
-      if ( mkdirp_error ) {
-        reject(mkdirp_error);
-      }
-
-      fs.writeFile(new_path, source, (write_file_error) => {
-
-        if (write_file_error) {
-          reject(write_file_error);
-        }
-
-        resolve(new_path);
-
-      });
-
-    });
-
-  });
-}

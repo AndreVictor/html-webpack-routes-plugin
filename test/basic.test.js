@@ -25,7 +25,7 @@ describe('Basic', function() {
         output_filename = path.basename(output_path);
         output_directory = path.dirname(output_path);
 
-        route_paths = config.plugins[2].routes.map(route => {
+        route_paths = config.plugins[2].settings.map(route => {
           return path.join(output_directory, route, output_filename);
         });
 
