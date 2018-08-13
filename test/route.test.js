@@ -9,6 +9,7 @@ const basic_fixture_path = './examples/react-prerender/dist';
 const basic_fixture_location = path.resolve(basic_fixture_path, basic_fixture_name);
 const basic_fixture_html = fs.readFileSync(path.resolve(__dirname, basic_fixture_location)).toString();
 
+const react_prerender = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-prerender.html')).toString();
 const react_prerender_page2 = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-prerender-page2.html')).toString();
 
 describe('Route', function() {
@@ -77,14 +78,27 @@ describe('Route', function() {
 
   describe('prerender', function() {
 
-    const route = new Route(route_data);
-
     it('should prerender the module into the document', () => {
+
+      const route = new Route(route_data);
 
       route.updateAssetPaths();
       route.prerender();
 
       expect(route.source).to.equal(react_prerender_page2);
+
+    });
+
+    it('should prerender the module into the default path', () => {
+
+      const route = new Route(Object.assign({}, route_data, {
+        route_path: '/',
+      }));
+
+      route.updateAssetPaths();
+      route.prerender();
+
+      expect(route.source).to.equal(react_prerender);
 
     });
 

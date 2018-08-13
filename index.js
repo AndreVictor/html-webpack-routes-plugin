@@ -18,13 +18,15 @@ class HtmlWebpackRoutesPlugin {
 
     compiler.hooks.compilation.tap('HtmlWebpackRoutesPlugin', compilation => {
 
-      compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {
+      compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {
 
         const routes = this.routes();
 
         // If the input isn't an array we can't work with it
 
         if ( !Array.isArray(routes) ) return;
+
+        routes.push('/');
 
         const promises = routes.map((route) => {
 
@@ -36,14 +38,24 @@ class HtmlWebpackRoutesPlugin {
             route_path: route,
             output_path: compilation.compiler.outputPath,
             output_name: data.outputName,
-            source: compilation.assets[data.outputName].source(),
+            source: data.html,
             assets: assets,
           });
+
 
           route.updateAssetPaths();
 
           if ( this.settings.prerender ) {
             route.prerender(this.settings.prerender);
+          }
+
+
+          if ( route.route_path === '/' ) {
+
+            data.html = route.source;
+
+            return;
+
           }
 
           return route.writeRoute();
