@@ -32,4 +32,30 @@ describe('Util', function() {
 
   });
 
+  describe('parseStringToJson', function() {
+
+    const data = {
+      plugin: {
+        assetJson: '[{"entryName":"main","path":"main.js"}]'
+      }
+    };
+
+    const assets = [
+      {
+        entryName: 'main',
+        path: 'main.js'
+      }
+    ];
+
+    it('should return an array of the asset paths', function() {
+
+      const parsed_assets = Util.parseStringToJson(data.plugin.assetJson);
+
+      expect(parsed_assets[0].entryName).to.equal(assets[0].entryName);
+      expect(parsed_assets[0].path).to.equal(assets[0].path);
+
+    });
+
+  });
+
 });

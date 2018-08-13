@@ -40,10 +40,13 @@ module.exports = {
     new HtmlWebpackPartialsPlugin({
       path: path.join(__dirname, &apos;./partials/body.html&apos;)
     }),
-    new HtmlWebpackRoutesPlugin([
-      &apos;/page1&apos;,
-      &apos;/page2&apos;
-    ])
+    new HtmlWebpackRoutesPlugin({
+      prerender: true,
+      routes: [
+        &apos;/page1&apos;,
+        &apos;/page2&apos;
+      ]
+    })
   ]
 };
 </pre><script src="../main.js"></script>

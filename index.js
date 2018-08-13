@@ -1,4 +1,5 @@
-const Assets = require('./lib/assets');
+const Util = require('./lib/util');
+const Asset = require('./lib/asset');
 const Route = require('./lib/route');
 
 /**
@@ -27,16 +28,25 @@ class HtmlWebpackRoutesPlugin {
 
         const promises = routes.map((route) => {
 
+          let assets = Util.parseStringToJson(data.plugin.assetJson);
+
+          assets = assets.map((asset) => new Asset(asset));
+
           route = new Route({
             route_path: route,
             output_path: compilation.compiler.outputPath,
             output_name: data.outputName,
             source: compilation.assets[data.outputName].source(),
-            assets: Assets.parseAssetsFromData(data),
-            prerender: this.settings.prerender,
+            assets: assets,
           });
 
-          return route.cloneSourceToRoute();
+          route.updateAssetPaths();
+
+          if ( this.settings.prerender ) {
+            route.prerender(this.settings.prerender);
+          }
+
+          return route.writeRoute();
 
         });
 
