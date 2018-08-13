@@ -2,6 +2,8 @@ const Util = require('./lib/util');
 const Asset = require('./lib/asset');
 const Route = require('./lib/route');
 
+const asset_regex = new RegExp(/.*\.(js|css)$/);
+
 /**
  * HtmlWebpackRoutesPlugin
  * @description Webpack plugin based on HTML Webpack Plugin that clones routes based on given input
@@ -32,7 +34,9 @@ class HtmlWebpackRoutesPlugin {
 
           let assets = Util.parseStringToJson(data.plugin.assetJson);
 
-          assets = assets.map((asset) => new Asset(asset));
+          // Set up new asset instances and filter out any that don't match an actual asset path (css or js)
+
+          assets = assets.map((asset) => new Asset(asset)).filter((asset) => asset_regex.test(asset.path));
 
           route = new Route({
             route_path: route,
