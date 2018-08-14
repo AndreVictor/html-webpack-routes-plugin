@@ -19,27 +19,32 @@ describe('Asset', function() {
     }
   ];
 
+  const asset_data = {
+    entry_name: assets[0].entryName,
+    path: assets[0].path,
+    location: path.resolve(__dirname, '../examples/react-advanced/main.js'),
+    output_path: path.resolve(__dirname, '../examples/react-advanced/')
+  }
+
+  const path_to_original = '..';
+
   it('should set up a new instance of an asset with the right path', () => {
 
-    const asset = new Asset(assets[0]);
+    const asset = new Asset(asset_data);
 
     expect(asset.path).to.equal(assets[0].path);
 
   });
 
-  describe('setNewPathLocation', function() {
+  describe('setNewPath', function() {
 
     it('should return an array of the asset paths', function() {
 
-      const asset = new Asset(assets[0]);
-      const path_to_original = '../../';
+      const asset = new Asset(asset_data);
 
-      asset.setNewPathLocation({
-        path_to_original: path_to_original,
-        original_directory: 'asdf',
-      });
+      asset.setNewPath(path_to_original);
 
-      expect(asset.path_new).to.equal(`${path_to_original}${assets[0].path.replace('./', '')}`);
+      expect(asset.path_new).to.equal(`${path_to_original}/${asset.path}`);
 
     });
 
@@ -49,13 +54,9 @@ describe('Asset', function() {
 
     it('should load the correct module', function() {
 
-      const asset = new Asset(assets[0]);
-      const path_to_original = '../';
+      const asset = new Asset(asset_data);
 
-      asset.setNewPathLocation({
-        path_to_original: path_to_original,
-        original_directory: path.resolve(__dirname, '../examples/react-prerender/dist'),
-      });
+      asset.setNewPath(path_to_original);
 
       asset.loadModule();
 
@@ -70,14 +71,11 @@ describe('Asset', function() {
     it('should invoke the application of the given module', function() {
 
       const expected = '<h1 data-reactroot="">Hello, <!-- -->!</h1>';
-      const asset = new Asset(assets[0]);
-      const path_to_original = '../';
+      const asset = new Asset(asset_data);
+
       let application;
 
-      asset.setNewPathLocation({
-        path_to_original: path_to_original,
-        original_directory: path.resolve(__dirname, '../examples/react-prerender/dist'),
-      });
+      asset.setNewPath(path_to_original);
 
       asset.loadModule();
 

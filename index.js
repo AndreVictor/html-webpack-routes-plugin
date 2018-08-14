@@ -2,7 +2,7 @@ const Util = require('./lib/util');
 const Asset = require('./lib/asset');
 const Route = require('./lib/route');
 
-const asset_regex = new RegExp(/.*\.(js|css)$/);
+const ASSET_REGEX = new RegExp(/.*\.(js|css)$/);
 
 /**
  * HtmlWebpackRoutesPlugin
@@ -28,24 +28,25 @@ class HtmlWebpackRoutesPlugin {
 
         if ( !Array.isArray(routes) ) return;
 
+        // Add the base path to get prerendred as well
+
         routes.push('/');
 
         const promises = routes.map((route) => {
 
           let assets = Util.parseStringToJson(data.plugin.assetJson);
 
-          // Set up new asset instances and filter out any that don't match an actual asset path (css or js)
-
-          assets = assets.map((asset) => new Asset(asset)).filter((asset) => asset_regex.test(asset.path));
+          assets = assets.map((asset) => setupAssets(asset, compilation.compiler)).filter(filterAssets);
 
           route = new Route({
-            route_path: route,
-            output_path: compilation.compiler.outputPath,
             output_name: data.outputName,
-            source: data.html,
+            route_path: route,
             assets: assets,
+            source: {
+              output_path: compilation.compiler.outputPath,
+              html: data.html,
+            }
           });
-
 
           route.updateAssetPaths();
 
@@ -53,13 +54,9 @@ class HtmlWebpackRoutesPlugin {
             route.prerender(this.settings.prerender);
           }
 
-
-          if ( route.route_path === '/' ) {
-
-            data.html = route.source;
-
+          if ( route.isBaseRoute() ) {
+            data.html = route.source.html;
             return;
-
           }
 
           return route.writeRoute();
@@ -98,6 +95,39 @@ class HtmlWebpackRoutesPlugin {
     }
 
   }
+
+}
+
+
+/**
+ * setupAssets
+ * @description
+ */
+
+function setupAssets(asset, compiler) {
+
+  let asset_data = {};
+
+  asset_data.entry_name = asset.entryName;
+  asset_data.path = asset.path;
+  asset_data.location = compiler.options.entry[asset_data.entry_name];
+  asset_data.output_path = compiler.outputPath;
+
+  return new Asset(asset_data);
+
+}
+
+
+/**
+ * filterAssets
+ * @description
+ */
+
+function filterAssets(asset) {
+
+  // Filter out any that don't match an actual asset path (css or js)
+
+  return ASSET_REGEX.test(asset.path);
 
 }
 
