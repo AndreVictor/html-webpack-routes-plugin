@@ -31,7 +31,7 @@ describe('Route', function() {
 
   it('should set up a new instance of a route', () => {
 
-    const expected_path = '/Users/colby/Code/html-webpack-routes-plugin/examples/react-advanced/dist/page2';
+    const expected_path = path.resolve(__dirname, '../examples/react-advanced/dist/page2');
 
     const route = new Route(route_data);
 
