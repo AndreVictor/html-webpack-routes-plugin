@@ -104,12 +104,12 @@ class HtmlWebpackRoutesPlugin {
  * @description
  */
 
-function setupAssets(asset, compiler) {
+function setupAssets(asset = {}, compiler) {
 
   let asset_data = {};
 
   asset_data.entry_name = asset.entryName;
-  asset_data.path = asset.path;
+  asset_data.path = asset.path || asset;
   asset_data.location = compiler.options.entry[asset_data.entry_name];
   asset_data.output_path = compiler.outputPath;
 
@@ -127,7 +127,7 @@ function filterAssets(asset) {
 
   // Filter out any that don't match an actual asset path (css or js)
 
-  return ASSET_REGEX.test(asset.path);
+  return asset.location && ASSET_REGEX.test(asset.path);
 
 }
 
