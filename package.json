@@ -1,6 +1,6 @@
 {
   "name": "html-webpack-routes-plugin",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Clone routes for HTML Webpack Plugin",
   "keywords": [
     "webpack",
