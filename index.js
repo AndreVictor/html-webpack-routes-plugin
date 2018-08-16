@@ -41,6 +41,7 @@ class HtmlWebpackRoutesPlugin {
           route = new Route({
             output_name: data.outputName,
             route_path: route,
+            public_path: data.assets.publicPath,
             assets: assets,
             source: {
               output_path: compilation.compiler.outputPath,
