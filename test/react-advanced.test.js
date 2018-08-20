@@ -28,7 +28,7 @@ describe('React Advanced', function() {
         output_directory = path.dirname(output_path);
 
         route_paths = config.plugins[2].settings.routes.map(route => {
-          return path.join(output_directory, route, output_filename);
+          return path.join(output_directory, route.route || route, output_filename);
         });
 
         resolve();
@@ -48,7 +48,7 @@ describe('React Advanced', function() {
 
   it('should clone original to Page 1 route with public path in place', () => {
 
-    const cloned_source = fs.readFileSync(route_paths[1]).toString();
+    const cloned_source = fs.readFileSync(route_paths[0]).toString();
     const cloned_fixture = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-advanced-page1.html')).toString();
 
     expect(cloned_source).to.equal(cloned_fixture);
@@ -57,8 +57,17 @@ describe('React Advanced', function() {
 
   it('should clone original to Page 2 route with public path in place', () => {
 
-    const cloned_source = fs.readFileSync(route_paths[2]).toString();
+    const cloned_source = fs.readFileSync(route_paths[1]).toString();
     const cloned_fixture = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-advanced-page2.html')).toString();
+
+    expect(cloned_source).to.equal(cloned_fixture);
+
+  });
+
+  it('should clone original to Page 3 route with public path in place', () => {
+
+    const cloned_source = fs.readFileSync(route_paths[2]).toString();
+    const cloned_fixture = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-advanced-page3.html')).toString();
 
     expect(cloned_source).to.equal(cloned_fixture);
 

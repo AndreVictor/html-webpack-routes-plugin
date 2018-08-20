@@ -34,11 +34,16 @@ module.exports = {
       path: path.join(__dirname, './partials/body.html')
     }),
     new HtmlWebpackRoutesPlugin({
-      prerender: true,
+      app_root: '#custom-app-root-id',
       routes: [
-        '/',
         '/page1',
-        '/page2'
+        {
+          route: '/page2',
+        },
+        {
+          route: '/page3',
+          prerender: true,
+        },
       ]
     })
   ]

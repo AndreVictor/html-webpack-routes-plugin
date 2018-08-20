@@ -86,7 +86,9 @@ describe('Route', function() {
 
     it('should prerender the module into the document', () => {
 
-      const route = new Route(route_data);
+      const route = new Route(Object.assign({}, route_data, {
+        app_root: '#custom-app-root-id',
+      }));
 
       route.updateAssetPaths();
       route.prerender();

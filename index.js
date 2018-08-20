@@ -28,37 +28,53 @@ class HtmlWebpackRoutesPlugin {
 
         if ( !Array.isArray(routes) ) return;
 
-        // Add the base path to get prerendred as well
+        const promises = routes.map((route = {}) => {
 
-        routes.push('/');
+          const route_config = typeof route !== 'string' ? route : {
+            route: route
+          };
 
-        const promises = routes.map((route) => {
+          let assets;
 
-          let assets = Util.parseStringToJson(data.plugin.assetJson);
+          // If we don't have a route property, we don't have a valid config object
+
+          if ( !route_config.route ) return;
+
+          assets = Util.parseStringToJson(data.plugin.assetJson);
 
           assets = assets.map((asset) => setupAssets(asset, compilation.compiler)).filter(filterAssets);
 
           route = new Route({
+            app_root: this.settings.app_root,
             output_name: data.outputName,
-            route_path: route,
+            route_path: route_config.route,
             public_path: data.assets.publicPath,
             assets: assets,
             source: {
               output_path: compilation.compiler.outputPath,
               html: data.html,
-            }
+            },
+            should_prerender: this.settings.prerender || route_config.prerender
           });
+
+          // We need to udpate all of the assets in the given route to contain the new
+          // path relative to the original location
 
           route.updateAssetPaths();
 
-          if ( this.settings.prerender ) {
-            route.prerender(this.settings.prerender);
-          }
+          // Try to prerender the application
+
+          route.prerender();
+
+          // If the current route is the original / base, we want to replace the original HTML
+          // with our new source
 
           if ( route.isBaseRoute() ) {
             data.html = route.source.html;
             return;
           }
+
+          // Finally return a promise to write the route
 
           return route.writeRoute();
 
@@ -74,18 +90,24 @@ class HtmlWebpackRoutesPlugin {
 
   routes(settings = this.settings) {
 
-    if ( !settings ) return;
+    // Add the base path as default so we can additionally prerender if set globally
+
+    let routes = [
+      '/'
+    ];
+
+    if ( !settings ) return routes;
 
     // If it's an array, we want to return it as a cloned array
 
     if ( Array.isArray(settings) ) {
-      return Array.from(settings);
+      return routes.concat(Array.from(settings));
     }
 
     // If it's a string, turn it into an array to normalize it and send it
 
     if ( typeof settings === 'string' ) {
-      return [ settings ];
+      return routes.concat([ settings ]);
     }
 
     // If we have a routes property, run the same method on the routes value

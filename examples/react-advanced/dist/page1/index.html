@@ -3,7 +3,7 @@
     <title>Webpack App</title>
   </head>
   <body>
-  <div id="root"><h1 data-reactroot="">Hello, <!-- -->/page1<!-- -->!</h1></div>
+  <div id="custom-app-root-id"></div>
 
 <pre>const path = require(&apos;path&apos;);
 const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;);
@@ -16,7 +16,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, &apos;./dist&apos;),
-    filename: &apos;[name].js&apos;
+    filename: &apos;[name].[hash].js&apos;
   },
   module: {
     rules: [
@@ -41,10 +41,16 @@ module.exports = {
       path: path.join(__dirname, &apos;./partials/body.html&apos;)
     }),
     new HtmlWebpackRoutesPlugin({
-      prerender: true,
+      app_root: &apos;#custom-app-root-id&apos;,
       routes: [
         &apos;/page1&apos;,
-        &apos;/page2&apos;
+        {
+          route: &apos;/page2&apos;,
+        },
+        {
+          route: &apos;/page3&apos;,
+          prerender: true,
+        },
       ]
     })
   ]

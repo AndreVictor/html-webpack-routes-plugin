@@ -1,4 +1,4 @@
-<div id="root"></div>
+<div id="custom-app-root-id"></div>
 
 <pre>
 const path = require('path');
@@ -12,7 +12,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, './dist'),
-    filename: '[name].js'
+    filename: '[name].[hash].js'
   },
   module: {
     rules: [
@@ -37,10 +37,16 @@ module.exports = {
       path: path.join(__dirname, './partials/body.html')
     }),
     new HtmlWebpackRoutesPlugin({
-      prerender: true,
+      app_root: '#custom-app-root-id',
       routes: [
         '/page1',
-        '/page2'
+        {
+          route: '/page2',
+        },
+        {
+          route: '/page3',
+          prerender: true,
+        },
       ]
     })
   ]

@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <head>
+<!DOCTYPE html><html><head>
     <meta charset="utf-8">
     <title>Webpack App</title>
   </head>
   <body>
   <div id="root"></div>
 
-<pre>
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
-const HtmlWebpackRoutesPlugin = require('../../');
+<pre>const path = require(&apos;path&apos;);
+const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;);
+const HtmlWebpackPartialsPlugin = require(&apos;html-webpack-partials-plugin&apos;);
+const HtmlWebpackRoutesPlugin = require(&apos;../../&apos;);
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, './main.js')
+    main: path.join(__dirname, &apos;./main.js&apos;)
   },
   output: {
-    path: path.join(__dirname, './dist'),
-    filename: '[name].js'
+    path: path.join(__dirname, &apos;./dist&apos;),
+    filename: &apos;[name].js&apos;
   },
   module: {
     rules: [
@@ -27,11 +24,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: &apos;babel-loader&apos;,
           options: {
             presets: [
-              '@babel/preset-env',
-              '@babel/preset-react'
+              &apos;@babel/preset-env&apos;,
+              &apos;@babel/preset-react&apos;
             ]
           }
         }
@@ -41,13 +38,13 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin(),
     new HtmlWebpackPartialsPlugin({
-      path: path.join(__dirname, './partials/body.html')
+      path: path.join(__dirname, &apos;./partials/body.html&apos;)
     }),
     new HtmlWebpackRoutesPlugin([
-      '/page1',
-      '/page2'
+      &apos;/page1&apos;,
+      &apos;/page2&apos;
     ])
   ]
 };
-</pre><script src="main.js"></script></body>
-</html>
+</pre><script src="main.js"></script>
+</body></html>
