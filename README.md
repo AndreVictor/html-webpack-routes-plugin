@@ -7,11 +7,11 @@ Extends [HTML Webpack Plugin](https://github.com/jantimon/html-webpack-plugin) t
 
 ## Installation
 ```
-yarn add html-webpack-partials-plugin -D
+yarn add html-webpack-routes-plugin -D
 ```
 or
 ```
-npm add html-webpack-partials-plugin --save-dev
+npm add html-webpack-routes-plugin --save-dev
 ```
 
 ## Usage
