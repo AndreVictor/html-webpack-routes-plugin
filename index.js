@@ -56,6 +56,7 @@ class HtmlWebpackRoutesPlugin {
 
           assets = compiled_assets.map((asset) => new Asset(asset, compilation.compiler, compiled_assets));
 
+
           route = new Route({
             app_root: this.settings.app_root,
             output_name: data.outputName,

@@ -9,6 +9,8 @@ const react_advanced_page2 = fs.readFileSync(path.resolve(__dirname, 'fixtures/r
 
 describe('Route', function() {
 
+  const hash = '37ea9f69d0037c6c54e0';
+
   const compiler = {
     options: {
       entry: {
@@ -21,7 +23,7 @@ describe('Route', function() {
     {
       name: 'main',
       paths: [
-        'main.32b19d670c0faa3e1574.js'
+        `main.${hash}.js`
       ],
       input: [
         path.resolve(__dirname, '../examples/react-advanced/main.js'),
@@ -30,7 +32,7 @@ describe('Route', function() {
     {
       name: 'other',
       paths: [
-        'other.32b19d670c0faa3e1574.js'
+        `other.${hash}.js`
       ],
       input: [
         path.resolve(__dirname, '../examples/react-advanced/other.js'),
@@ -90,7 +92,7 @@ describe('Route', function() {
 
     it('should get the original and new path', () => {
 
-      const expected_new_path = '../main.32b19d670c0faa3e1574.js';
+      const expected_new_path = `../main.${hash}.js`;
 
       expect(route.assets[0].output_paths_new).to.equal(null);
 

@@ -1,15 +1,15 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="custom-app-root-id"></div><pre>const path = require(&apos;path&apos;);
-const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;);
-const HtmlWebpackPartialsPlugin = require(&apos;html-webpack-partials-plugin&apos;);
-const HtmlWebpackRoutesPlugin = require(&apos;../../&apos;);
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="custom-app-root-id"></div><pre>const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
+const HtmlWebpackRoutesPlugin = require('../../');
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, &apos;./main.js&apos;)
+    main: path.join(__dirname, './main.js')
   },
   output: {
-    path: path.join(__dirname, &apos;./dist&apos;),
-    filename: &apos;[name].[hash].js&apos;
+    path: path.join(__dirname, './dist'),
+    filename: '[name].[hash].js'
   },
   module: {
     rules: [
@@ -17,11 +17,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: &apos;babel-loader&apos;,
+          loader: 'babel-loader',
           options: {
             presets: [
-              &apos;@babel/preset-env&apos;,
-              &apos;@babel/preset-react&apos;
+              '@babel/preset-env',
+              '@babel/preset-react'
             ]
           }
         }
@@ -31,21 +31,21 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin(),
     new HtmlWebpackPartialsPlugin({
-      path: path.join(__dirname, &apos;./partials/body.html&apos;)
+      path: path.join(__dirname, './partials/body.html')
     }),
     new HtmlWebpackRoutesPlugin({
-      app_root: &apos;#custom-app-root-id&apos;,
+      app_root: '#custom-app-root-id',
       routes: [
-        &apos;/page1&apos;,
+        '/page1',
         {
-          route: &apos;/page2&apos;,
+          route: '/page2',
         },
         {
-          route: &apos;/page3&apos;,
+          route: '/page3',
           prerender: true,
         },
       ]
     })
   ]
 };
-</pre><script src="../main.32b19d670c0faa3e1574.js"></script><script src="../other.32b19d670c0faa3e1574.js"></script></body></html>
+</pre><script src="../main.37ea9f69d0037c6c54e0.js"></script><script src="../other.37ea9f69d0037c6c54e0.js"></script></body></html>

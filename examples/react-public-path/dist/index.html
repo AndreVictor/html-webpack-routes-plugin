@@ -1,15 +1,15 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"><h1 data-reactroot="">Hello, <!-- -->/<!-- -->!</h1></div><pre>const path = require(&apos;path&apos;);
-const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;);
-const HtmlWebpackPartialsPlugin = require(&apos;html-webpack-partials-plugin&apos;);
-const HtmlWebpackRoutesPlugin = require(&apos;../../&apos;);
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"><h1 data-reactroot="">Hello, <!-- -->/<!-- -->!</h1></div><pre>const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
+const HtmlWebpackRoutesPlugin = require('../../');
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, &apos;./main.js&apos;)
+    main: path.join(__dirname, './main.js')
   },
   output: {
-    path: path.join(__dirname, &apos;./dist&apos;),
-    filename: &apos;[name].js&apos;
+    path: path.join(__dirname, './dist'),
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -17,11 +17,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: &apos;babel-loader&apos;,
+          loader: 'babel-loader',
           options: {
             presets: [
-              &apos;@babel/preset-env&apos;,
-              &apos;@babel/preset-react&apos;
+              '@babel/preset-env',
+              '@babel/preset-react'
             ]
           }
         }
@@ -31,13 +31,13 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin(),
     new HtmlWebpackPartialsPlugin({
-      path: path.join(__dirname, &apos;./partials/body.html&apos;)
+      path: path.join(__dirname, './partials/body.html')
     }),
     new HtmlWebpackRoutesPlugin({
       prerender: true,
       routes: [
-        &apos;/page1&apos;,
-        &apos;/page2&apos;
+        '/page1',
+        '/page2'
       ]
     })
   ]

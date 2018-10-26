@@ -86,7 +86,7 @@ describe('Asset', function() {
 
     it('should invoke the application of the given module', function() {
 
-      const expected = '<h1 data-reactroot="">Hello, <!-- -->!</h1>';
+      const expected = '<h1 data-reactroot="">Hello, <!-- -->! <span>test "asdf" test</span></h1>';
       const asset = new Asset(assets[0], compiler);
 
       let application;
