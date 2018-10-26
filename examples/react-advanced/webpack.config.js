@@ -5,7 +5,11 @@ const HtmlWebpackRoutesPlugin = require('../../');
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, './main.js')
+    main: path.join(__dirname, './main.js'),
+    other: [
+      path.join(__dirname, './other.js'),
+      path.join(__dirname, './another.js')
+    ]
   },
   output: {
     path: path.join(__dirname, './dist'),

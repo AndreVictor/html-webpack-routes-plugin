@@ -6,18 +6,40 @@ const Asset = require('../lib/asset');
 
 const react_advanced = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-advanced.html')).toString();
 const react_advanced_page2 = fs.readFileSync(path.resolve(__dirname, 'fixtures/react-advanced-page2.html')).toString();
-const compiler_react_advanced_source = fs.readFileSync(path.resolve(__dirname, 'fixtures/compiler/react-advanced-source.html')).toString();
 
 describe('Route', function() {
 
-  const assets = [
-    new Asset({
-      entry_name: 'main',
-      path: 'main.cbeaab90b61a0bde349f.js',
-      location: path.resolve(__dirname, '../examples/react-advanced/main.js'),
-      output_path: path.resolve(__dirname, '../examples/react-advanced/')
-    })
+  const compiler = {
+    options: {
+      entry: {
+        main: path.resolve(__dirname, '../examples/react-advanced/main.js')
+      }
+    }
+  };
+
+  let assets = [
+    {
+      name: 'main',
+      paths: [
+        'main.32b19d670c0faa3e1574.js'
+      ],
+      input: [
+        path.resolve(__dirname, '../examples/react-advanced/main.js'),
+      ]
+    },
+    {
+      name: 'other',
+      paths: [
+        'other.32b19d670c0faa3e1574.js'
+      ],
+      input: [
+        path.resolve(__dirname, '../examples/react-advanced/other.js'),
+        path.resolve(__dirname, '../examples/react-advanced/another.js'),
+      ]
+    }
   ];
+
+  assets = assets.map(asset => new Asset(asset, compiler, assets));
 
   const route_data = {
     output_name: 'index.html',
@@ -25,7 +47,7 @@ describe('Route', function() {
     assets: assets,
     source: {
       output_path: path.resolve(__dirname, '../examples/react-advanced/dist'),
-      html: compiler_react_advanced_source,
+      html: react_advanced,
     }
   };
 
@@ -68,15 +90,14 @@ describe('Route', function() {
 
     it('should get the original and new path', () => {
 
-      const expected_new_path = '../main.cbeaab90b61a0bde349f.js';
+      const expected_new_path = '../main.32b19d670c0faa3e1574.js';
 
-      expect(route.assets[0].path_new).to.equal(undefined);
-      expect(route.source.html.indexOf(route.assets[0].path_new)).to.equal(-1);
+      expect(route.assets[0].output_paths_new).to.equal(null);
 
       route.updateAssetPaths();
 
-      expect(route.assets[0].path_new).to.equal(expected_new_path);
-      expect(route.source.html.indexOf(route.assets[0].path_new)).to.not.equal(-1);
+      expect(route.assets[0].output_paths_new[0]).to.equal(expected_new_path);
+      expect(route.source.html.indexOf(route.assets[0].output_paths_new[0])).to.not.equal(-1);
 
     });
 

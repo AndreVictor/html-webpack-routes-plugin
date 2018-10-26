@@ -1,8 +1,8 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const Util = require('./lib/util');
 const Asset = require('./lib/asset');
 const Route = require('./lib/route');
-
-const ASSET_REGEX = new RegExp(/.*\.(js|css)$/);
 
 /**
  * HtmlWebpackRoutesPlugin
@@ -20,7 +20,21 @@ class HtmlWebpackRoutesPlugin {
 
     compiler.hooks.compilation.tap('HtmlWebpackRoutesPlugin', compilation => {
 
-      compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {
+      HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {;
+
+        const compiled_assets = Array.from(compilation.namedChunks).map(chunk => {
+
+          const settings = chunk[1];
+
+          if ( !settings ) return {};
+
+          return {
+            name: settings.name,
+            paths: settings.files,
+            input: compiler.options.entry[settings.name],
+          };
+
+        });
 
         const routes = this.routes();
 
@@ -40,15 +54,13 @@ class HtmlWebpackRoutesPlugin {
 
           if ( !route_config.route ) return;
 
-          assets = Util.parseStringToJson(data.plugin.assetJson);
-
-          assets = assets.map((asset) => setupAssets(asset, compilation.compiler)).filter(filterAssets);
+          assets = compiled_assets.map((asset) => new Asset(asset, compilation.compiler, compiled_assets));
 
           route = new Route({
             app_root: this.settings.app_root,
             output_name: data.outputName,
             route_path: route_config.route,
-            public_path: data.assets.publicPath,
+            public_path: compilation.options.output.publicPath,
             assets: assets,
             source: {
               output_path: compilation.compiler.outputPath,
@@ -118,39 +130,6 @@ class HtmlWebpackRoutesPlugin {
     }
 
   }
-
-}
-
-
-/**
- * setupAssets
- * @description
- */
-
-function setupAssets(asset = {}, compiler) {
-
-  let asset_data = {};
-
-  asset_data.entry_name = asset.entryName;
-  asset_data.path = asset.path || asset;
-  asset_data.location = compiler.options.entry[asset_data.entry_name];
-  asset_data.output_path = compiler.outputPath;
-
-  return new Asset(asset_data);
-
-}
-
-
-/**
- * filterAssets
- * @description
- */
-
-function filterAssets(asset) {
-
-  // Filter out any that don't match an actual asset path (css or js)
-
-  return asset.location && ASSET_REGEX.test(asset.path);
 
 }
 

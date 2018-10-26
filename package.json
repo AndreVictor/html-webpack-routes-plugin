@@ -30,10 +30,11 @@
     }
   },
   "dependencies": {
-    "@babel/core": "^7.0.0-rc.1",
-    "@babel/preset-env": "^7.0.0-beta.52",
-    "@babel/preset-react": "^7.0.0-beta.52",
-    "@babel/register": "^7.0.0-rc.1",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "cheerio": "^1.0.0-rc.2",
     "fs": "^0.0.1-security",
     "mkdirp": "^0.5.1",
@@ -42,13 +43,12 @@
     "react-dom": "^16.4.1"
   },
   "devDependencies": {
-    "babel-loader": "^8.0.0-beta",
     "chai": "^4.1.2",
-    "html-webpack-partials-plugin": "^0.1.4",
-    "html-webpack-plugin": "^4.0.0-alpha",
+    "html-webpack-partials-plugin": "^0.5.1",
+    "html-webpack-plugin": "^4.0.0-beta.2",
     "husky": "^1.0.0-rc.13",
     "mocha": "^5.2.0",
-    "nyc": "^12.0.2",
+    "nyc": "^13.1.0",
     "webpack": "^4.15.1",
     "webpack-cli": "^3.0.8"
   }

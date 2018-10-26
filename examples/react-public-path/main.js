@@ -8,4 +8,6 @@ if ( canUseDOM() ) {
   ReactDOM.hydrate( <App route={currentRoute()} />, window.document.getElementById( 'root' ) );
 }
 
-module.exports.application = App;
+if ( typeof module !== 'undefined' && typeof module.exports !== 'undefined' ) {
+  module.exports.application = App;
+}

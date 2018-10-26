@@ -1,25 +1,15 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Webpack App</title>
-  </head>
-  <body>
-  <div id="custom-app-root-id"></div>
-
-<pre>
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPartialsPlugin = require('html-webpack-partials-plugin');
-const HtmlWebpackRoutesPlugin = require('../../');
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Webpack App</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="custom-app-root-id"></div><pre>const path = require(&apos;path&apos;);
+const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;);
+const HtmlWebpackPartialsPlugin = require(&apos;html-webpack-partials-plugin&apos;);
+const HtmlWebpackRoutesPlugin = require(&apos;../../&apos;);
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, './main.js')
+    main: path.join(__dirname, &apos;./main.js&apos;)
   },
   output: {
-    path: path.join(__dirname, './dist'),
-    filename: '[name].[hash].js'
+    path: path.join(__dirname, &apos;./dist&apos;),
+    filename: &apos;[name].[hash].js&apos;
   },
   module: {
     rules: [
@@ -27,11 +17,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: &apos;babel-loader&apos;,
           options: {
             presets: [
-              '@babel/preset-env',
-              '@babel/preset-react'
+              &apos;@babel/preset-env&apos;,
+              &apos;@babel/preset-react&apos;
             ]
           }
         }
@@ -41,22 +31,21 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin(),
     new HtmlWebpackPartialsPlugin({
-      path: path.join(__dirname, './partials/body.html')
+      path: path.join(__dirname, &apos;./partials/body.html&apos;)
     }),
     new HtmlWebpackRoutesPlugin({
-      app_root: '#custom-app-root-id',
+      app_root: &apos;#custom-app-root-id&apos;,
       routes: [
-        '/page1',
+        &apos;/page1&apos;,
         {
-          route: '/page2',
+          route: &apos;/page2&apos;,
         },
         {
-          route: '/page3',
+          route: &apos;/page3&apos;,
           prerender: true,
         },
       ]
     })
   ]
 };
-</pre><script src="main.cbeaab90b61a0bde349f.js"></script></body>
-</html>
+</pre><script src="main.ea0c3cda36e987b01de6.js"></script><script src="other.ea0c3cda36e987b01de6.js"></script></body></html>

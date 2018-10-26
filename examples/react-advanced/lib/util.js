@@ -9,6 +9,7 @@ export function currentRoute() {
   const routes = [
     '/page1',
     '/page2',
+    '/page3',
   ];
 
   return routes.filter((route) => document.location.pathname.includes(route))[0] || default_route;

@@ -14,23 +14,39 @@ describe('Asset', function() {
 
   const assets = [
     {
-      entryName: 'main',
-      path: 'main.js'
+      name: 'main',
+      paths: [
+        'main.ea0c3cda36e987b01de6.js'
+      ],
+      input: [
+        path.resolve(__dirname, '../examples/react-advanced/main.js'),
+      ]
+    },
+    {
+      name: 'other',
+      paths: [
+        'other.ea0c3cda36e987b01de6.js'
+      ],
+      input: [
+        path.resolve(__dirname, '../examples/react-advanced/other.js'),
+        path.resolve(__dirname, '../examples/react-advanced/another.js'),
+      ]
     }
   ];
 
-  const asset_data = {
-    entry_name: assets[0].entryName,
-    path: assets[0].path,
-    location: path.resolve(__dirname, '../examples/react-advanced/main.js'),
-    output_path: path.resolve(__dirname, '../examples/react-advanced/')
-  }
+  const compiler = {
+    options: {
+      entry: {}
+    }
+  };
+
+  compiler.options.entry[assets[0].entryName] = path.resolve(__dirname, '../examples/react-advanced/main.js');
 
   const path_to_original = '..';
 
   it('should set up a new instance of an asset with the right path', () => {
 
-    const asset = new Asset(asset_data);
+    const asset = new Asset(assets[0], compiler);
 
     expect(asset.path).to.equal(assets[0].path);
 
@@ -40,27 +56,27 @@ describe('Asset', function() {
 
     it('should return an array of the asset paths', function() {
 
-      const asset = new Asset(asset_data);
+      const asset = new Asset(assets[0], compiler, assets);
 
-      asset.setNewPath(path_to_original);
+      asset.setNewPath(path_to_original, undefined);
 
-      expect(asset.path_new).to.equal(`${path_to_original}/${asset.path}`);
+      expect(asset.output_paths_new[0]).to.equal('../main.ea0c3cda36e987b01de6.js');
 
     });
 
   });
 
-  describe('loadModule', function() {
+  describe('loadModules', function() {
 
     it('should load the correct module', function() {
 
-      const asset = new Asset(asset_data);
+      const asset = new Asset(assets[0], compiler, assets);
 
-      asset.setNewPath(path_to_original);
+      asset.setNewPath(path_to_original, undefined);
 
-      asset.loadModule();
+      asset.loadModules();
 
-      expect(asset.module).to.equal(require(path.resolve(asset.location)));
+      expect(asset.modules[0]).to.equal(require(asset.input_locations[0]));
 
     });
 
@@ -71,13 +87,13 @@ describe('Asset', function() {
     it('should invoke the application of the given module', function() {
 
       const expected = '<h1 data-reactroot="">Hello, <!-- -->!</h1>';
-      const asset = new Asset(asset_data);
+      const asset = new Asset(assets[0], compiler);
 
       let application;
 
       asset.setNewPath(path_to_original);
 
-      asset.loadModule();
+      asset.loadModules();
 
       application = asset.invokeApplication({
         route: this.route_path
