@@ -34,9 +34,15 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin(),
-    new HtmlWebpackPartialsPlugin({
-      path: path.join(__dirname, './partials/body.html')
-    }),
+    new HtmlWebpackPartialsPlugin([
+      {
+        path: path.join(__dirname, './partials/body.html')
+      },
+      {
+        path: path.join(__dirname, './partials/head.html'),
+        location: 'head'
+      }
+    ]),
     new HtmlWebpackRoutesPlugin({
       app_root: '#custom-app-root-id',
       routes: [
