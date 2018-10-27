@@ -35,7 +35,6 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.4",
-    "cheerio": "^1.0.0-rc.2",
     "fs": "^0.0.1-security",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
