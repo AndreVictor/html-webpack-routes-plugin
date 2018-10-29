@@ -22,6 +22,8 @@ class HtmlWebpackRoutesPlugin {
 
       HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync('HtmlWebpackRoutesPlugin', (data, callback) => {;
 
+        const base_html = data.html;
+
         const compiled_assets = Array.from(compilation.namedChunks).map(chunk => {
 
           const settings = chunk[1];
@@ -65,7 +67,7 @@ class HtmlWebpackRoutesPlugin {
             assets: assets,
             source: {
               output_path: compilation.compiler.outputPath,
-              html: data.html,
+              html: base_html,
             },
             should_prerender: this.settings.prerender || route_config.prerender
           });

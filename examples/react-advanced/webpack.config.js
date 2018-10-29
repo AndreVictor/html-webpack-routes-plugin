@@ -46,7 +46,10 @@ module.exports = {
     new HtmlWebpackRoutesPlugin({
       app_root: '#custom-app-root-id',
       routes: [
-        '/page1',
+        {
+          route: '/page1',
+          prerender: true,
+        },
         {
           route: '/page2',
         },
